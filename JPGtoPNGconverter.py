@@ -1,7 +1,10 @@
 import os
-from PIL import Image
+from PIL import Image, ImageFilter, ImageEnhance, ImageOps
 import sys
 
+# ToDo: Add a feature to remove the background of the provided photo.
+# Todo: Edge detection using the canny method.
+# ToDo: Adding an increase, decrease contrast function.
 
 if len(sys.argv) == 3:
     sourceDir = sys.argv[1]
@@ -27,3 +30,34 @@ else:
             theImage = Image.open(i)
             imgName, imgExt = os.path.splitext(i)
             theImage.save(f'pngs/{imgName}.png')
+
+enhanceMents = {
+    "imgSHR": ImageEnhance.Sharpness,
+    "imgBRI": ImageEnhance.Brightness,
+    "imgCLR": ImageEnhance.Color,
+    "imgCTR": ImageEnhance.Contrast
+}
+
+filters = {
+    'blur': ImageFilter.BLUR,
+    'contour': ImageFilter.CONTOUR,
+    'emboss': ImageFilter.EMBOSS,
+    'edge_enhance': ImageFilter.EDGE_ENHANCE,
+    'edge_enhance_more': ImageFilter.EDGE_ENHANCE_MORE,
+    'detail': ImageFilter.DETAIL,
+    'smooth': ImageFilter.SMOOTH,
+    'smooth_more': ImageFilter.SMOOTH_MORE
+}
+
+
+def adjustEffect(effect, factor):  # Factor is in between 0-1 for most cases
+    enhanced_object = enhanceMents[effect](im)
+    enhanced_output = enhanced_object.enhance(factor)
+    enhanced_output.thumbnail(size)
+    enhanced_output.show()
+
+
+def addFilter(effect):
+    filtered_image = im.filter(filters[effect])
+    filtered_image.thumbnail(size)
+    filtered_image.show()
